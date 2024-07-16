@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Key>maven/io/confluent/kafka-connect-s3/11.0.0/kafka-connect-s3-11.0.0.jar</Key><RequestId>RNFD6S1DXHSJFZVA</RequestId><HostId>XO6rU5g9HvYbVb+vEK3MBHhH4cg+pW9yWfat07EhUDLmu/X69OhKqME3QcGYqMv+GgGgE74qsnY=</HostId></Error>

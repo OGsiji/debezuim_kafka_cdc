@@ -58,17 +58,21 @@ services:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: 'http://connect:8083'
+      # CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
+      # CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
+      # CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_CONNECT_HEALTHCHECK_ENDPOINT: '/connectors'
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      CONFLIENT_METRICS_ENABLE: 'false'
       PORT: 9021
     networks:
       - code-with-yu
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9021/health" ]
-      interval: 30s
+      interval: 60s
       timeout: 10s
       retries: 5
 
@@ -93,6 +97,8 @@ services:
       KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       ENABLE_DEBEZIUM_SCRIPTING: 'true'
+    volumes:
+      - ./kafka-connect-jars:/etc/kafka-connect/jars
     healthcheck:
       test:
         [ 'CMD', 'curl', '--silent', '--fail', '-X', 'GET', 'http://localhost:8083/connectors', ]
@@ -133,6 +139,34 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      code-with-yu:
+
+  connect:
+    image: confluentinc/cp-kafka-connect:latest
+    depends_on:
+      - broker
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker:29092'
+      CONNECT_GROUP_ID: 'quickstart-avro'
+      CONNECT_CONFIG_STORAGE_TOPIC: 'quickstart-avro-config'
+      CONNECT_OFFSET_STORAGE_TOPIC: 'quickstart-avro-offsets'
+      CONNECT_STATUS_STORAGE_TOPIC: 'quickstart-avro-status'
+      CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect'
+      CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=WARN'
+      CONNECT_PLUGIN_PATH: '/etc/kafka-connect/jars'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+    volumes:
+      - ./confluentinc-kafka-connect-s3-10.5.13:/etc/kafka-connect/jars
     networks:
       code-with-yu:
 

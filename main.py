@@ -6,6 +6,7 @@ import random
 
 fake = faker.Faker()
 
+
 def generate_transaction():
     user = fake.simple_profile()
 
@@ -76,3 +77,22 @@ if __name__ == "__main__":
 
     cur.close()
     conn.commit()
+
+
+
+
+
+
+{
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "topic.prefix": "postgres",
+  "database.user": "postgres",
+  "database.dbname": "financial_db",
+  "database.hostname": "postgres",
+  "database.password": "********",
+  "name": "test_db",
+  "plugin.name": "pgoutput"
+
+}
+
+
