@@ -1,15 +1,16 @@
-# CDC with Debezium, Kafka, Postgres, Docker 
+# CDC with Debezium, Kafka, Postgres, Docker
 
 ## Overview
 
-This Python script is designed to generate simulated financial transactions and insert them into a PostgreSQL database. It's particularly useful for setting up a test environment for Change Data Capture (CDC) with Debezium. The script uses the `faker` library to create realistic, yet fictitious, transaction data and inserts it into a PostgreSQL table.
+This project demonstrates a Change Data Capture (CDC) pipeline using Debezium, Kafka, Postgres, and Docker. It showcases how to incrementally ingest data from a Postgres database to Kafka using Debezium CDC connectors, process and store these updates using Apache Hudi, and persist the data in S3. The pipeline also includes transformation, denormalization, and enrichment of the raw data to serve various analytics, reporting, AI, search, and other product requirements.
 
 ## System Architecture
-![system architecture.png](notion_pipeline.png)
+
+![system architecture](notion_pipeline.png)
 
 ## Prerequisites
 
-Before running this script, ensure you have the following installed:
+Before running this setup, ensure you have the following installed:
 - Python 3.9+
 - `psycopg2` library for Python
 - `faker` library for Python
@@ -75,7 +76,9 @@ Before running this script, ensure you have the following installed:
    ```
 
 ## Customization
+
 You can modify the Docker Compose file to suit your needs. For example, you might want to persist data in Postgres by adding a volume for the Postgres service.
 
 ## Note
+
 This setup is intended for development and testing purposes. For production environments, consider additional factors like security, scalability, and data persistence.
